@@ -18,6 +18,7 @@
                 <a href="../index.php">Page d'acceuil</a>
             </div>
             <fieldset>
+            //partie form
                 <form action="utilisateur.php" method="post">
                     ID-User : <input type="text" name="idUser" required /><br><br>
                     User-name : <input type="text" name="nom" required /><br><br>
