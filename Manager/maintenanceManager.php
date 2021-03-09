@@ -24,7 +24,7 @@ class MaintenanceManager
         $query->bindValue(':motif', $mainte->getMotif());
         $query->bindValue(':descript', $mainte->getDescription());
         $query->bindValue(':opera', $mainte->getOperateur());
-        $query->bindValue(':idAffectfk', $mainte->getIdAffectationfk(), PDO::PARAM_INT);
+        $query->bindValue(':idAffectfk', $mainte->getIdAffectationfk());
         $query->execute();
         // var_dump($query->execute());
     }

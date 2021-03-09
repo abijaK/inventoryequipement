@@ -54,8 +54,7 @@
                         dateAcquisition : <input type="date" name="dateAcquisition" required />
                     </p>
                     <p>
-                        description : <textarea name="description" required>
-                    </textarea>
+                        description : <textarea name="description" required /></textarea>
                     </p>
                     <input type="submit" value="Enregistrer" />
                 </form>

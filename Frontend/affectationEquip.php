@@ -12,8 +12,8 @@
 <body>
     <?php
     require '../Backend/affectationEquip.php';
-    require '../Manager/affectManager.php';
-    $affectMan = new AffectManager();
+    require '../Manager/affectationManager.php';
+    $affectMan = new AffectationManager();
 
     ?>
     <div class="content">

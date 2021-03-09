@@ -1,5 +1,5 @@
 <?php
-class AffectManager
+class AffectationManager
 {
     private $dbConx;
     public function __construct()
