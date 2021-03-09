@@ -21,15 +21,15 @@
         </fieldset><br>
         <?php
         require '../Backend/categorie.php';
-        require '../Backend/serviceManager.php';
+        require '../Manager/categorieManager.php';
 
-        $serviceMan = new ServiceManager();
+        $cateMan = new CategorieManager();
 
         if (isset($_POST['categorie'])) {
             $categ = $_POST['categorie'];
             $data = ['designation' => $categ];
             $cat = new Categorie($data);
-            $serviceMan->saveCat($cat);
+            $cateMan->saveCat($cat);
         }
         ?>
         <hr>
@@ -39,7 +39,7 @@
                 <td>Designation</td>
             </tr>
             <?php
-            $data = $serviceMan->showCategorie();
+            $data = $cateMan->showCategorie();
             foreach ($data as $cat) {
                 echo '<tr>
                     <td>' . $cat->getDesignation() . '</td>
@@ -48,11 +48,11 @@
                     </tr>';
             }
 
-            if (isset($_GET['categ'])) {
-                $id = $_GET['categ'];
-                $serviceMan->deleteCategorie($id);
-                header('Location: ' . $_SERVER['PHP_SELF']);
-            }
+            // if (isset($_GET['categ'])) {
+            //     $id = $_GET['categ'];
+            //     $cateMan->deleteCategorie($id);
+            //     header('Location: ' . $_SERVER['PHP_SELF']);
+            // }
             ?>
         </table>
     </div>

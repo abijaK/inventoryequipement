@@ -11,6 +11,14 @@
 </head>
 
 <body>
+    <?php
+    //Load files path into the class
+    require '../Backend/service.php';
+    require '../Manager/serviceManager.php';
+    //These objects are created just before an user enters such value in the form's input.
+    $serviceMan = new ServiceManager();
+    ?>
+
     <div class="content">
         <div class="head">
             Menu
@@ -22,7 +30,7 @@
             </div>
             <fieldset>
                 <form action="service.php" method="post">
-                    IdService : <input type="text" name="idservice" required /><br><br>
+                    <!-- IdService : <input type="text" name="idservice" required /><br><br> -->
                     Designation : <input type="text" name="designation" required />
                     <br><br>
                     <input type="submit" value="Enregistrer" />
@@ -31,20 +39,12 @@
             <br>
 
             <?php
-            //Load files path into the class
-            require '../Backend/service.php';
-            require '../Backend/serviceManager.php';
 
-            //These objects are created just before an user enters such value in the form's input.
-            $serviceMan = new ServiceManager();
-
-            // 
-
-            if (isset($_POST['idservice'])) {
+            if (isset($_POST['designation'])) {
                 // isset() test if the superglobal variable $_POST exists, then it processes the inputs
-                $idser = $_POST['idservice'];
+                // $idser = $_POST['idservice'];
                 $design = $_POST['designation'];
-                $data = ['idservice' => $idser, 'designation' => $design];
+                $data = ['designation' => $design];
                 $service = new Service($data); // service is an object helping to hydrate the array of data
                 $serviceMan->saveService($service);
 

@@ -44,7 +44,7 @@ class AffectationEquip
     {
         $idEqufk = (int) $idEqufk;
         if (is_int($idEqufk) && $idEqufk > 0) {
-            $this->idAffEqu = $idEqufk;
+            $this->idEqufk = $idEqufk;
         }
     }
     public function getIdEqufk()
@@ -65,7 +65,7 @@ class AffectationEquip
     public function setAmortDuree($amortDuree)
     {
         $amortDuree = (int) $amortDuree;
-        if (is_string($amortDuree)) {
+        if (is_int($amortDuree)) {
             $this->amortDuree = $amortDuree;
         }
     }
@@ -86,7 +86,7 @@ class AffectationEquip
     }
     public function setEta($eta)
     {
-        $eta = (int) $eta;
+        $eta = (string) $eta;
         if (is_string($eta)) {
             $this->eta = $eta;
         }
@@ -97,7 +97,7 @@ class AffectationEquip
     }
     public function setDescr($descr)
     {
-        $descr = (int) $descr;
+        $descr = (string) $descr;
         if (is_string($descr)) {
             $this->descr = $descr;
         }

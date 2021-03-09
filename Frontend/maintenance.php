@@ -11,6 +11,14 @@
 </head>
 
 <body>
+    <?php
+    //Load files path into the class
+    require '../Backend/maintenance.php';
+    require '../Manager/maintenanceManager.php';
+
+    //These objects are created just before an user enters such value in the form's input.
+    $mainteMan = new MaintenanceManager();
+    ?>
     <div class="content">
         <div class="body">
 
@@ -19,39 +27,50 @@
             </div>
             <fieldset>
                 <form action="maintenance.php" method="post">
-                    IdMaintenance : <input type="text" name="idMaintenance" required /><br><br>
-                    DateMaintenance : <input type="date" name="dateMaintenance" required /><br><br>
-                    Motif : <input type="text" name="motif" required /><br><br>
-                    Description : <input type="text" name="description" required /><br><br>
-                    Operateur : <input type="text" name="operateur" required /><br><br>
-                    IdAffectationfk : <input type="text" name="idAffectationfk" required />
-                    <br><br>
+                    <!-- IdMaintenance : <input type="text" name="idMaintenance" required /><br><br> -->
+                    <p>
+                        DateMaintenance : <input type="date" name="dateMaintenance" required />
+                    </p>
+                    <p>
+                        Motif : <input type="text" name="motif" required />
+                    </p>
+                    <p>
+                        Description : <input type="text" name="description" required />
+                    </p>
+                    <p>
+                        Operateur : <input type="text" name="operateur" required />
+                    </p>
+                    <p>
+                        IdAffectationfk :<select name="idAffectationfk">
+                            <option value="" selected></option>
+                            <?php
+
+                            $tab = $mainteMan->loadAffectfk();
+                            foreach ($tab as  $item) {
+
+                                echo '<option value="' . $item['designation'] . '">' . $item['designation'] . '</option>';
+                            }
+                            ?>
+                        </select><br>
+                    </p>
                     <input type="submit" value="Enregistrer" />
                 </form>
             </fieldset>
             <br>
 
             <?php
-            //Load files path into the class
-            require '../Backend/maintenance.php';
-            require '../Backend/serviceManager.php';
 
-            //These objects are created just before an user enters such value in the form's input.
-            $serviceMan = new ServiceManager();
-
-            // 
-
-            if (isset($_POST['idMaintenance'])) {
+            if (isset($_POST['dateMaintenance'])) {
                 // isset() test if the superglobal variable $_POST exists, then it processes the inputs
-                $idmaint = $_POST['idMaintenance'];
+                // $idmaint = $_POST['idMaintenance'];
                 $dateMaint = $_POST['dateMaintenance'];
                 $motif = $_POST['motif'];
                 $descript = $_POST['description'];
                 $opera = $_POST['operateur'];
                 $idAffectfk = $_POST['idAffectationfk'];
-                $data = ['idMaintenance' => $idmaint, 'dateMaintenance' => $dateMaint, 'motif' => $motif, 'description' => $descript, 'operateur' => $opera, 'idAffectationfk' => $idAffectfk];
-                $maint = new Maintenance($data); // service is an object helping to hydrate the array of data
-                $serviceMan->saveMaint($maint);
+                $data = ['dateMaintenance' => $dateMaint, 'motif' => $motif, 'description' => $descript, 'operateur' => $opera, 'idAffectationfk' => $idAffectfk];
+                $maint = new Maintenance($data); // maint is an object helping to hydrate the array of data
+                $mainteMan->saveMaint($maint);
             }
 
             ?>
@@ -70,7 +89,7 @@
 
                 <?php
                 // '
-                $data  = $serviceMan->showMaintenance();
+                $data  = $mainteMan->showMaintenance();
                 foreach ($data as $maint) {
                     echo '
                          <tr>
@@ -86,11 +105,11 @@
                     </tr>';
                 }
 
-                if (isset($_GET['idmaint'])) {
-                    $id = $_GET['idmaint']; //this object get the id that it uses to return the value to delete 
-                    $serviceMan->deleteMaintenance($id);
-                    header('Location: ' . $_SERVER['PHP_SELF']); //this method is used to refresh the page when the value is deleted
-                }
+                // if (isset($_GET['idmaint'])) {
+                //     $id = $_GET['idmaint']; //this object get the id that it uses to return the value to delete 
+                //     $mainteMan->deleteMaintenance($id);
+                //     header('Location: ' . $_SERVER['PHP_SELF']); //this method is used to refresh the page when the value is deleted
+                // }
                 ?>
 
             </table>

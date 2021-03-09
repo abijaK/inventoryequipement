@@ -19,15 +19,31 @@
             </div>
             <fieldset>
                 <form action="utilisateur.php" method="post">
-                    ID-User : <input type="text" name="idUser" required /><br><br>
-                    User-name : <input type="text" name="nom" required /><br><br>
-                    Mot de passe : <input type="text" name="pswd" required /><br><br>
-                    RoleSys : <input type="text" name="roleSys" required /><br><br>
-                    Email : <input type="text" name="email" required /><br><br>
-                    Fonction : <input type="text" name="fonction" required /><br><br>
-                    Telephone : <input type="text" name="telephone" required /><br><br>
-                    State : <input type="text" name="state" required /><br><br>
-                    idServicefk : <input type="text" name="idServicefk" required /><br><br>
+                    <!-- ID-User : <input type="text" name="idUser" required /><br><br> -->
+                    <p>
+                        User-name : <input type="text" name="nom" required /><br><br>
+                    </p>
+                    <p>
+                        Mot de passe : <input type="password" name="pswd" required /><br><br>
+                    </p>
+                    <p>
+                        RoleSys : <input type="text" name="roleSys" required /><br><br>
+                    </p>
+                    <p>
+                        Email : <input type="text" name="email" required /><br><br>
+                    </p>
+                    <p>
+                        Fonction : <input type="text" name="fonction" required /><br><br>
+                    </p>
+                    <p>
+                        Telephone : <input type="text" name="telephone" required /><br><br>
+                    </p>
+                    <p>
+                        State : <input type="text" name="state" required /><br><br>
+                    </p>
+                    <p>
+                        idServicefk : <input type="text" name="idServicefk" required /><br><br>
+                    </p>
                     <input type="submit" value="Enregistrer" />
                 </form>
             </fieldset>
@@ -36,15 +52,15 @@
             <?php
             //Load files path into the class
             require '../Backend/utilisateur.php';
-            require '../Backend/serviceManager.php';
+            require '../Manager/utilisateurManager.php';
 
             //These objects are created just before an user enters such value in the form's input.
-            $serviceMan = new ServiceManager();
+            $utilMan = new UtilisateurManager();
 
 
-            if (isset($_POST['idUser'])) {
+            if (isset($_POST['nom'])) {
 
-                $iduser = $_POST['idUser'];
+                // $iduser = $_POST['idUser'];
                 $nom = $_POST['nom'];
                 $pass = $_POST['pswd'];
                 $roleSys = $_POST['roleSys'];
@@ -55,12 +71,12 @@
                 $idServfk = $_POST['idServicefk'];
 
                 $data = [
-                    'idUser' => $iduser, 'nom' => $nom, 'pswd' => $pass, 'roleSys' => $roleSys, 'email' => $email, 'fonction' => $fonct, 'telephone' => $tel, 'etat' => $state, 'idServicefk' => $idServfk
+                    /* 'idUser' => $iduser, */
+                    'nom' => $nom, 'pswd' => $pass, 'roleSys' => $roleSys, 'email' => $email, 'fonction' => $fonct, 'telephone' => $tel, 'etat' => $state, 'idServicefk' => $idServfk
                 ];
                 $user = new Utilisateur($data); // service is an object helping to hydrate the array of data
-                $serviceMan->saveUsers($user);
+                $utilMan->saveUsers($user);
             }
-
             ?>
 
             <br>
@@ -79,7 +95,7 @@
                 </tr>
                 <?php
                 //'
-                $data  = $serviceMan->showUsers();
+                $data  = $utilMan->showUsers();
                 foreach ($data as $user) {
                     echo '
                     <tr>

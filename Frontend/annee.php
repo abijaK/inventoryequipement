@@ -22,26 +22,28 @@
 
         <?php
         require '../Backend/annee.php';
-        require '../Backend/serviceManager.php';
+        require '../Manager/anneeManager.php';
 
-        $serviceManager = new ServiceManager();
+        $anneeMan = new AnneeManager();
 
         if (isset($_POST['annee'])) {
             $attrAnnee = $_POST['annee'];
             $data = ['annee' => $attrAnnee];
             $newAnnee = new Annee($data);
-            $serviceManager->saveAnnee($newAnnee);
+            $anneeMan->saveAnnee($newAnnee);
             // var_dump($serviceManager);
         }
         ?>
-        <br>
+
+        <p>
         <h2>Annee d'attribution de l'equipement</h2>
+        </p>
         <table>
             <tr>
                 <td>Annee</td>
             </tr>
             <?php
-            $data = $serviceManager->showAnnee();
+            $data = $anneeMan->showAnnee();
             foreach ($data as $newAnnee) {
                 echo '
                 <tr>
@@ -53,7 +55,7 @@
 
             // if (isset($_GET['attrAnnee'])) {
             //     $id = $_GET['attrAnnee'];
-            //     $serviceMan->deleteAnnee($id);
+            //     $anneeMan->deleteAnnee($id);
             //     header('Location: ' . $_SERVER['PHP_SELF']);
             // }
             ?>

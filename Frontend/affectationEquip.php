@@ -12,79 +12,53 @@
 <body>
     <?php
     require '../Backend/affectationEquip.php';
-    require '../Backend/affectManager.php';
+    require '../Manager/affectManager.php';
     $affectMan = new AffectManager();
+
     ?>
     <div class="content">
         <div class="home">
             <a href="../index.php">Page d'accueil</a>
         </div>
-        <fieldset>
-            <form action="affectationEquip.php" method="post">
-                ID-Affectation : <input type="text" name="idaff" required /><br><br>
-                ID-Equipement : <input type="text" name="idEquip" required />
-                model : <input type="text" name="model" required /><br><br>
-                marque : <input type="text" name="marque" required />
-
-
-                <p>
-                    Categoriefk :<select name="categoriefk">
-                        <option value="" selected></option>
-                        <?php
-
-                        $tab = $serviceMan->loadCat();
-                        foreach ($tab as  $item) {
-
-                            echo '<option value="' . $item['designation'] . '">' . $item['designation'] . '</option>';
-                        }
-                        ?>
-                    </select><br>
-                </p>
-                dateAcquisition : <input type="date" name="dateAcquisition" required />
-                description : <input type="text" name="description" required /><br><br>
-                <input type="submit" value="Enregistrer" />
-            </form>
-        </fieldset>
         <div class="formul">
             <fieldset>
                 <form action="affectationEquip.php" method="post">
-                    ID-Affectation : <input type="text" name="idaff">
+                    <!-- ID-Affectation : <input type="text" name="idaff"> -->
                     <p>
                         ID-Equipement : <select name="idEquip">
-                            <option value="" selected>
-                                <?php
+                            <!-- <option value="" selected></option> -->
+                            <?php
 
-                                $tab = $serviceMan->loadEquip();
-                                foreach ($tab as  $item) {
+                            $tab = $affectMan->loadEquip();
+                            foreach ($tab as  $item) {
 
-                                    echo '<option value="' . $item['idEquipement'] . '">' . $item['designation'] . '</option>';
-                                }
-                                ?>
-                            </option>
+                                echo '<option value="' . $item['idEquipement'] . '">' . $item['designation'] . '</option>';
+                            }
+                            ?>
+
                         </select>
                     </p>
                     <p>
                         ID-Service : <select name="idServi">
-                            <option value="" selected>
-                                <?php
-
-                                $tab = $serviceMan->loadDesignService();
-                                foreach ($tab as  $item) {
-
-                                    echo '<option value="' . $item['idService'] . '">' . $item['designation'] . '</option>';
-                                }
-                                ?>
-                        </select>
-                    </p>
-                    Date : <input type="date" name="dateaff">
-
-                    Duree-Amortissement : <input type="text" name="durAmort">
-                    <p>
-                        Annee : <select name="anee">
-                            <option value="" selected>5555</option>
+                            <!-- <option value="" selected></option> -->
                             <?php
 
-                            $tab = $serviceMan->loadAnnee();
+                            $tab = $affectMan->loadDesignService();
+                            foreach ($tab as  $item) {
+
+                                echo '<option value="' . $item['idService'] . '">' . $item['designation'] . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </p>
+                    <p>Date : <input type="date" name="dateaff"></p>
+
+                    <p>Duree-Amortissement : <input type="text" name="durAmort"></p>
+                    <p>
+                        Annee : <select name="anee">
+                            <?php
+
+                            $tab = $affectMan->loadAnnee();
                             foreach ($tab as  $item) {
 
                                 echo '<option value="' . $item['annee'] . '">' . $item['annee'] . '</option>';
@@ -92,8 +66,12 @@
                             ?>
                         </select>
                     </p>
-                    Etat-Equipement : <input type="text" name="eta">
-                    Description : <input type="text" name="descr">
+                    <p>
+                        Etat-Equipement : <input type="text" name="eta">
+                    </p>
+                    <p>
+                        Description : <input type="text" name="descr">
+                    </p>
 
                     <input type="submit" value="Enregistrer">
                 </form>
@@ -101,24 +79,27 @@
         </div>
         <?php
 
-        if (isset($_POST['idaff'])) {
-            $id = $_POST['idaff'];
+        if (isset($_POST['dateaff'])) {
+            // $id = $_POST['idaff'];
             $date = $_POST['dateaff'];
             $idEqui = $_POST['idEquip'];
             $idServ = $_POST['idServi'];
             $dureeAm = $_POST['durAmort'];
             $annee = $_POST['anee'];
             $etats = $_POST['eta'];
-            $desk = $_POST['descri'];
-            $data = ['idAffEqu' => $id, 'dateAffEqu' => $date, 'idEqufk' => $idEqui, 'idServifk' => $idServ, 'amortDuree' => $dureeAm,  'anneeAfk' => $annee, 'eta' => $etats, 'descr' => $desk];
+            $desk = $_POST['descr'];
+            $data = [
+                'dateAffEqu' => $date, 'idEqufk' => $idEqui, 'idServifk' => $idServ, 'amortDuree' => $dureeAm,
+                'anneeAfk' => $annee, 'eta' => $etats, 'descr' => $desk
+            ];
             $affect = new AffectationEquip($data);
-            $serviceMan->saveAffectationEquip($affect);
+            echo  $affect->getIdEqufk();
+            $affectMan->saveAffectationEquip($affect);
         }
         ?>
-
         <br>
         <h2>Affectation d'equipements</h2>
-        <table>
+        <table border="1px">
             <tr>
                 <td>ID-Affectation</td>
                 <td>ID-Equipement</td>
@@ -129,21 +110,22 @@
                 <td>Etat</td>
                 <td>Description</td>
             </tr>
-
             <?php
+            $data = $affectMan->showAffectationEquip();
 
-            $data = $affectManMan->showAffectationEquip();
             foreach ($data as $affect) {
-                echo '
+
+                //  print_r($data);
+                echo '<br>
             <tr>
-            <td>' . $affect->getIdAffEqu() . '</td>' .
-                    '<td>' . $affect->getIdEqufk() . '</td>' .
-                    '<td>' . $affect->getIdServifk() . '</td>' .
-                    '<td>' . $affect->getDateAffEqu() . '</td>' .
-                    '<td>' . $affect->getAmortDuree() . '</td>' .
-                    '<td>' . $affect->getAnneeAfk() . '</td>' .
-                    '<td>' . $affect->getEta() . '</td>' .
-                    '<td>' . $affect->getDescr() . '</td>
+            <td>' . $affect['idAffEqu'] . '</td>' .
+                    '<td>' . $affect['equip'] . '</td>' .
+                    '<td>' . $affect['service'] . '</td>' .
+                    '<td>' . $affect['dateAffEqu'] . '</td>' .
+                    '<td>' . $affect['amortDuree'] . '</td>' .
+                    '<td>' . $affect['anneeAfk'] . '</td>' .
+                    '<td>' . $affect['eta'] . '</td>' .
+                    '<td>' . $affect['descr'] . '</td>
                 <td><a href="affectationEquip.php">Edit</a></td>
                  <td><a href="affectationEquip.php">Supprimer</a></td>
             </tr>';

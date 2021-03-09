@@ -4,7 +4,9 @@ class AffectManager
     private $dbConx;
     public function __construct()
     {
-        $conx = new PDO('mysql:host=127.0.0.1;dname=inventorymanagement', 'root', '');
+        $conx = new PDO('mysql:host=127.0.0.1;dbname=inventorymanagement', 'root', '');
+        $conx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        $conx->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $this->setDbConx($conx);
     }
     public function setDbConx(PDO $PDO)
@@ -15,16 +17,12 @@ class AffectManager
     {
         try {
 
-            // $query = $this->dbConx->prepare("INSERT INTO AffectationEqui(idAffEqu, dateAffEqu, idEqufk, idServifk, amortDuree, anneeAfk, eta, descr)
-            //  VALUES (?,?,?,?,?,?,?,?)");
-
-            $query = $this->dbConx->prepare("INSERT INTO affectationEqui(idAffEqu, dateAffEqu, idEqufk, idServifk, amortDuree, anneeAfk, eta, descr)
-             VALUES (:idAffEqu, :dateAffEqu, :idEqufk, :idServifk, :amortDuree, :anneeAfk, :eta, :descr)");
-            $query->bindValue(':idAffEqu', $affEq->getIdAffEqu(), PDO::PARAM_INT);
+            $query = $this->dbConx->prepare("INSERT INTO affectationequip( dateAffEqu, idEqufk, idServifk, amortDuree, anneeAfk, eta, descr)
+             VALUES (:dateAffEqu, :idEqufk, :idServifk, :amortDuree, :anneeAfk, :eta, :descr)");
             $query->bindValue(':dateAffEqu', $affEq->getDateAffEqu());
             $query->bindValue(':idEqufk', $affEq->getIdEqufk(), PDO::PARAM_INT);
             $query->bindValue(':idServifk', $affEq->getIdServifk(), PDO::PARAM_INT);
-            $query->bindValue(':amortDuree', $affEq->getAmortDuree());
+            $query->bindValue(':amortDuree', $affEq->getAmortDuree(), PDO::PARAM_INT);
             $query->bindValue(':anneeAfk', $affEq->getAnneeAfk());
             $query->bindValue(':eta', $affEq->getEta());
             $query->bindValue(':descr', $affEq->getDescr());
@@ -36,23 +34,26 @@ class AffectManager
     public function showAffectationEquip()
     {
         $tabAff = [];
-        $request = $this->dbConx->query("SELECT * FROM affectationEquip ORDER BY idAffEqu ASC");
+        $request = $this->dbConx->query("SELECT idAffEqu,dateAffEqu, equipement.designation as equip, 
+        service.designation as service, amortDuree, anneeAfk, eta, descr FROM affectationEquip
+        INNER JOIN service ON idService=idServifk INNER JOIN equipement ON idEquipement=idEqufk ORDER BY idAffEqu ASC");
         while ($data = $request->fetch(\PDO::FETCH_ASSOC)) {
-            $tabAff[] = new AffectationEquip($data);
+
+            $tabAff[] = $data;
         }
         return $tabAff;
     }
 
-    public function deleteAffectationEquip($id)
+    public function deleteAffectationEquip($idAffEqu)
     {
-        $request = $this->dbCon->exec("DELETE FROM affectationEquip WHERE idAffEqu=" . $id);
+        $request = $this->dbConx->exec("DELETE FROM affectationEquip WHERE idAffEqu=" . $idAffEqu);
     }
 
     // Data loading for AffectationEquip
 
     public function loadDesignService()
     {
-        $request = $this->dbCon->query('SELECT idService, designation FROM service ORDER BY designation ASC');
+        $request = $this->dbConx->query('SELECT idService, designation FROM service ORDER BY designation ASC');
         // var_dump($request);
         while ($data = $request->fetch(\PDO::FETCH_ASSOC)) {
             $design[] = ($data);
@@ -61,7 +62,7 @@ class AffectManager
     }
     public function loadAnnee()
     {
-        $request = $this->dbCon->query('SELECT annee FROM annee ORDER BY annee DESC');
+        $request = $this->dbConx->query('SELECT annee FROM annee ORDER BY annee DESC');
         // var_dump($request);
         while ($data = $request->fetch(\PDO::FETCH_ASSOC)) {
             $ane[] = ($data);
@@ -70,7 +71,7 @@ class AffectManager
     }
     public function loadEquip()
     {
-        $request = $this->dbCon->query('SELECT idEquipement, designation FROM Equipement ORDER BY designation ASC');
+        $request = $this->dbConx->query('SELECT idEquipement, designation FROM Equipement ORDER BY designation ASC');
         // var_dump($request);
         while ($data = $request->fetch(\PDO::FETCH_ASSOC)) {
             $equi[] = ($data);

@@ -14,10 +14,10 @@
     <?php
     //Load files path into the class
     require '../Backend/equipement.php';
-    require '../Backend/serviceManager.php';
+    require '../Manager/equipementManager.php';
 
     //These objects are created just before an user enters such value in the form's input.
-    $serviceMan = new ServiceManager();
+    $equipMan = new EquipementManager();
     ?>
     <div class="content">
         <div class="body">
@@ -27,18 +27,22 @@
             </div>
             <fieldset>
                 <form action="equipement.php" method="post">
-                    idEquipement : <input type="text" name="idEquipement" required /><br><br>
-                    Designation : <input type="text" name="designation" required />
-                    model : <input type="text" name="model" required /><br><br>
-                    marque : <input type="text" name="marque" required />
-
-
+                    <!-- idEquipement : <input type="text" name="idEquipement" required /><br><br> -->
+                    <p>
+                        Designation : <input type="text" name="designation" required />
+                    </p>
+                    <p>
+                        model : <input type="text" name="model" required />
+                    </p>
+                    <p>
+                        marque : <input type="text" name="marque" required />
+                    </p>
                     <p>
                         Categoriefk :<select name="categoriefk">
                             <option value="" selected></option>
                             <?php
 
-                            $tab = $serviceMan->loadCat();
+                            $tab = $equipMan->loadCat();
                             foreach ($tab as  $item) {
 
                                 echo '<option value="' . $item['designation'] . '">' . $item['designation'] . '</option>';
@@ -46,8 +50,13 @@
                             ?>
                         </select><br>
                     </p>
-                    dateAcquisition : <input type="date" name="dateAcquisition" required />
-                    description : <input type="text" name="description" required /><br><br>
+                    <p>
+                        dateAcquisition : <input type="date" name="dateAcquisition" required />
+                    </p>
+                    <p>
+                        description : <textarea name="description" required>
+                    </textarea>
+                    </p>
                     <input type="submit" value="Enregistrer" />
                 </form>
             </fieldset>
@@ -56,9 +65,9 @@
             <?php
 
 
-            if (isset($_POST['idEquipement'])) {
+            if (isset($_POST['designation'])) {
                 // isset() test if the superglobal variable $_POST exists or is used, then it processes the inputs
-                $idEq = $_POST['idEquipement'];
+                // $idEq = $_POST['idEquipement'];
                 $design = $_POST['designation'];
                 $model = $_POST['model'];
                 $marque = $_POST['marque'];
@@ -67,16 +76,15 @@
                 $desc = $_POST['description'];
 
                 $data = [
-                    'idEquipement' => $idEq, 'designation' => $design, 'model' => $model, 'marque' => $marque, 'categoriefk' => $catfk, 'dateAcquisition' => $dateAcqui, 'description' => $desc
+                    'designation' => $design, 'model' => $model, 'marque' => $marque, 'categoriefk' => $catfk, 'dateAcquisition' => $dateAcqui, 'description' => $desc
                 ];
-                $equip = new Equipement($data); // service is an object helping to hydrate the array of data
-                $serviceMan->saveEquip($equip);
+                $equip = new Equipement($data); // equip is an object helping to hydrate the array of data
+                $equipMan->saveEquip($equip);
             }
-
             ?>
 
             <br>
-            <h2 class="list">Liste des services</h2>
+            <h2 class="list">Liste des equipements</h2>
             <table>
                 <tr>
                     <td>IdEquipement</td>
@@ -88,7 +96,7 @@
                     <td>Description</td>
                 </tr>
                 <?php
-                $data  = $serviceMan->showEquipement();
+                $data  = $equipMan->showEquipement();
                 foreach ($data as $equip) {
                     echo '
                     <tr>
@@ -105,11 +113,11 @@
                 </tr>';
                 }
 
-                if (isset($_GET['idEq'])) {
-                    $id = $_GET['idEq']; //this object get the id that it uses to return the value to delete 
-                    $serviceMan->deleteEquipement($id);
-                    header('Location: ' . $_SERVER['PHP_SELF']); //this method is used to refresh the page when the value is deleted
-                }
+                // if (isset($_GET['idEq'])) {
+                //     $id = $_GET['idEq']; //this object get the id that it uses to return the value to delete 
+                //     $equipMan->deleteEquipement($id);
+                //     header('Location: ' . $_SERVER['PHP_SELF']); //this method is used to refresh the page when the value is deleted
+                // }
                 ?>
 
 
